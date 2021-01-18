@@ -1,9 +1,9 @@
+package lesson1;
 
 
-
-
+//Задание №1. Написать метод, который меняет два элемента массива местами.(массив может быть любого ссылочного типа);
 public class Lesson1Task1 {
-    public static <T> T changeArrElement(T arr[], int a, int b){
+    public static <T> void changeArrElement(T[] arr, int a, int b){
         int c;
         System.out.println("Исходный массив: ");
         for (int i = 0; i < arr.length; i++) {
@@ -19,7 +19,6 @@ public class Lesson1Task1 {
             System.out.print(arr[i]);
         }
         System.out.println();
-        return (T) arr;
     }
 
 
