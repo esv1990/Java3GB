@@ -1,4 +1,4 @@
-package Lesson2.client;
+package Lesson3.client;
 
 public class Callback {
 

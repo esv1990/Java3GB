@@ -1,4 +1,4 @@
-package Lesson2.server;
+package Lesson3.server;
 
 public class Main {
     public static void main(String[] args) {

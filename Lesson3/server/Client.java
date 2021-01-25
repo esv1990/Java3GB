@@ -1,9 +1,11 @@
-package Lesson2.server;
+package Lesson3.server;
 
-import java.io.IOException;
-import java.net.Socket;
+import Lesson2.server.Server;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 public class Client {
     private String nickname;
@@ -16,7 +18,6 @@ public class Client {
         return nickname;
     }
 
-
     public Client(Server server, Socket socket) {
         try {
             this.server = server;
@@ -27,12 +28,11 @@ public class Client {
                 try {
                     while (true) {
                         String msg = in.readUTF();
-                        // /auth login1 pass1
                         if (msg.startsWith("/auth ")) {
                             String[] tokens = msg.split("\\s");
                             String nickname = server.getAuthService().getNickname(tokens[1], tokens[2]);
                             if (nickname != null && !server.isNickBusy(nickname)) {
-                                sendMsg("/auth " + nickname);
+                                sendMsg("/auth:succeeded " + nickname);
                                 this.nickname = nickname;
                                 server.subscribe(this);
                                 break;
@@ -52,21 +52,20 @@ public class Client {
                             }
                             if (msg.startsWith("/changenick ")) {
                                 String newNickname = msg.split("\\s", 2)[1];
-                                if (newNickname.contains(" ")) {
-                                    sendMsg("Nickname cannot contain spaces");
+                                if (!newNickname.matches("([a-zA-Z]+[0-9]*)|([а-яА-Я]+[0-9]*)")) {
+                                    sendMsg("/changenick:error Nickname can contain only letters and numbers");
                                     continue;
                                 }
                                 if (server.getAuthService().changeNickname(this.nickname, newNickname)) {
                                     this.nickname = newNickname;
-                                    sendMsg("/changenick " + nickname);
-                                    sendMsg("Nickname has been changed");
+                                    sendMsg("/changenick:succeeded " + nickname);
                                     server.broadcastClientsList();
                                 } else {
-                                    sendMsg("Nickname is already taken");
+                                    sendMsg("/changenick:error Nickname is already taken");
                                 }
                             }
                         } else {
-                            server.broadcastMsg(nickname + ": " + msg);
+                            server.broadcastMsg(this.nickname, msg);
                         }
                     }
                 } catch (IOException e) {
@@ -107,4 +106,3 @@ public class Client {
         }
     }
 }
-

@@ -1,4 +1,4 @@
-package Lesson2.server;
+package Lesson3.server;
 
 public class AuthService {
     String getNickname(String login, String password);
