@@ -1,13 +1,17 @@
-package Lesson3.server;
+package Lesson4.Task2.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class Server {
     private Vector<Client> clients;
     private AuthService authService;
+    private ExecutorService clientsExecutorService;
 
     public AuthService getAuthService() {
         return authService;
@@ -21,6 +25,7 @@ public class Server {
         }
 
         authService = new DatabaseAuthService();
+        clientsExecutorService = Executors.newCachedThreadPool();
 
         try (ServerSocket serverSocket = new ServerSocket(8080)) {
             System.out.println("Server is listening on port " + serverSocket.getLocalPort() + "...");
@@ -32,18 +37,19 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            clientsExecutorService.shutdown();
             Database.disconnect();
             System.out.println("Server closed");
         }
     }
 
-    public void broadcastMsg(String senderNickname, String msg) {
+    public ExecutorService getClientsExecutorService() {
+        return clientsExecutorService;
+    }
+
+    public void broadcastMsg(String msg) {
         for (Client client : clients) {
-            if (client.getNickname().equals(senderNickname)) {
-                client.sendMsg("You: " + msg);
-            } else {
-                client.sendMsg(senderNickname + ": " + msg);
-            }
+            client.sendMsg(msg);
         }
     }
 
@@ -54,8 +60,8 @@ public class Server {
         }
         for (Client client : clients) {
             if (client.getNickname().equals(receiverNickname)) {
-                client.sendMsg(sender.getNickname() + " whispers" + ": " + msg);
-                sender.sendMsg("You whisper to " + receiverNickname + ": " + msg);
+                client.sendMsg(sender.getNickname() + " whispered" + ": " + msg);
+                sender.sendMsg("Whisper to " + receiverNickname + ": " + msg);
                 return;
             }
         }
@@ -96,4 +102,7 @@ public class Server {
             client.sendMsg(out);
         }
     }
+
+
+
 }

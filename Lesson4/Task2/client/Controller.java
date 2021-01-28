@@ -1,7 +1,8 @@
-package Lesson2.client;
+package Lesson4.Task2.client;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
@@ -9,7 +10,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-
     @FXML
     TextArea textArea;
 

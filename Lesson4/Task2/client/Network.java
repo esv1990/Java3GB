@@ -1,4 +1,4 @@
-package Lesson3.client;
+package Lesson2.client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
