@@ -1,4 +1,4 @@
-package Lesson3.client;
+package Lesson6.Task1.client;
 
 
 import javafx.application.Platform;
